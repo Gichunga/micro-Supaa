@@ -7,11 +7,11 @@
               <div class="col-md-4" >
                   <div class="card product-item">
 
-                        <carousel :perPage="1">
+                        <!-- <carousel :perPage="1">
                           <slide>
                                 <img :src="image" class="card-img-top" alt="..." width="250px">
                           </slide>
-                        </carousel>
+                        </carousel> -->
                 
                         <div class="card-body">
                           <div class="d-flex justify-content-between">
