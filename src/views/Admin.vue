@@ -3,7 +3,7 @@
     <div class="page-wrapper default-theme sidebar-bg bg1 toggled">
       <a
         id="show-sidebar"
-        @click="closeMenu"
+        @click="toggleSidebar"
         class="btn btn-sm btn-dark"
         href="#"
       >
@@ -14,7 +14,7 @@
           <!-- sidebar-brand  -->
           <div class="sidebar-item sidebar-brand">
             <a href="#">Vue Shop</a>
-            <div id="close-sidebar" @click="closeMenu">
+            <div id="close-sidebar" @click="toggleSidebar">
               <i class="fas fa-times"></i>
             </div>
           </div>
@@ -110,13 +110,13 @@
 </template>
 
 <script>
-import $ from "vue";
+import $ from "jquery";
 
 export default {
   name: "admin",
 
   methods: {
-    closeMenu() {
+    toggleSidebar() {
       $(".page-wrapper").toggleClass("toggled");
     },
   },
