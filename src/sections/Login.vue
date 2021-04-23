@@ -167,8 +167,8 @@ export default {
       fb.auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then((user) => {
-          $('#login').modal('hide')
-          this.$router.replace('admin');
+          $("#login").modal("hide");
+          this.$router.replace("admin");
         })
         .catch((error) => {
           // Handle Errors here.
@@ -182,8 +182,31 @@ export default {
           console.log(error);
         });
     },
-    login(){
-
+    login() {
+      fb
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+          $("#login").modal("hide");
+          this.$router.replace("admin") //replace the url to admin
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          if (errorCode === "auth/wrong-password") {
+            alert("Wrong password.");
+          } else if (errorCode === "auth/invalid-email") {
+            alert("Email is invalid.");
+          }else if (errorCode === "auth/user-not-found") {
+            alert("Your account has been temporaly disabled.");
+          }else if (errorCode === "auth/user-disabled") {
+            alert("Your account has been temporaly disabled.");
+          } else{
+            alert(errorMessage);
+          }
+          console.log(error);
+        });
     },
   },
 };

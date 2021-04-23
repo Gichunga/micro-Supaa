@@ -84,7 +84,6 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
   const currentUser = fb.auth().currentUser
-  console.log(currentUser)
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
