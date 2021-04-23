@@ -111,6 +111,7 @@
 
 <script>
 import $ from "jquery";
+import {fb} from "../firebase"
 
 export default {
   name: "admin",
@@ -119,6 +120,14 @@ export default {
     toggleSidebar() {
       $(".page-wrapper").toggleClass("toggled");
     },
+    logout(){
+      fb.auth().signOut()
+      .then(
+        this.$router.replace("/")
+      ).catch((err) => {
+        console.log(error);
+      });
+    }
   },
 };
 </script>
