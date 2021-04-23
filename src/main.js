@@ -4,8 +4,8 @@ import router from "./router";
 import "bootstrap";
 import "./assets/app.scss";
 import $ from "jquery";
-import "popper.js";
 window.$ = window.jQuery = $;
+import "popper.js";
 
 Vue.config.productionTip = false;
 

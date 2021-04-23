@@ -13,7 +13,37 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="loginLabel">Modal title</h5>
+            <ul
+              class="nav nav-fill nav-pills mb-3"
+              id="pills-tab"
+              role="tablist"
+            >
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  id="pills-home-tab"
+                  data-toggle="pill"
+                  href="#pills-login"
+                  role="tab"
+                  aria-controls="pills-login"
+                  aria-selected="true"
+                  >Login</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="pills-register-tab"
+                  data-toggle="pill"
+                  href="#pills-register"
+                  role="tab"
+                  aria-controls="pills-register"
+                  aria-selected="false"
+                  >Signup</a
+                >
+              </li>
+            </ul>
+            <!-- <h5 class="modal-title" id="loginLabel">Modal title</h5> -->
             <button
               type="button"
               class="close"
@@ -23,16 +53,96 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">...</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
+          <div class="modal-body">
+            <div
+              class="tab-content justify-content-start"
+              id="pills-tabContent"
             >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Understood</button>
+              <div
+                class="tab-pane fade show active"
+                id="pills-login"
+                role="tabpanel"
+                aria-labelledby="pills-login-tab"
+              >
+                <h5 class="text-center">Login Please</h5>
+                <div class="form-group text-left">
+                  <label for="exampleInputEmail1">Email address</label>
+                  <input
+                    type="email"
+                    v-model="email"
+                    class="form-control"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    placeholder="Enter email"
+                  />
+                  <small class="form-text text-muted"
+                    >We'll never share your email with anyone else.</small
+                  >
+                </div>
+                <div class="form-group text-left">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input
+                    type="password"
+                    @keyup.enter="login"
+                    v-model="password"
+                    class="form-control"
+                    id="exampleInputPassword1"
+                    placeholder="Password"
+                  />
+                </div>
+
+                <div class="form-group text-left">
+                  <button class="btn btn-primary" @click="login">Login</button>
+                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="pills-register"
+                role="tabpanel"
+                aria-labelledby="pills-register-tab"
+              >
+                <h5 class="text-center">Create New Account</h5>
+
+                <div class="form-group text-left">
+                  <label for="name">Your name</label>
+                  <input
+                    type="text"
+                    v-model="name"
+                    class="form-control"
+                    id="name"
+                    placeholder="Your nice name"
+                  />
+                </div>
+
+                <div class="form-group text-left">
+                  <label for="email">Email address</label>
+                  <input
+                    type="email"
+                    v-model="email"
+                    class="form-control"
+                    id="email"
+                    aria-describedby="emailHelp"
+                    placeholder="Enter email"
+                  />
+                </div>
+                <div class="form-group text-left">
+                  <label for="password">Password</label>
+                  <input
+                    type="password"
+                    v-model="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="Password"
+                  />
+                </div>
+
+                <div class="form-group text-left">
+                  <button class="btn btn-primary" @click="register">
+                    Signup
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -41,8 +151,41 @@
 </template>
 
 <script>
+import { fb } from "../firebase.js";
+
 export default {
   name: "Login",
+  data() {
+    return {
+      name: null,
+      email: null,
+      password: null,
+    };
+  },
+  methods: {
+    register() {
+      fb.auth()
+        .createUserWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+          $('#login').modal('hide')
+          this.$router.replace('admin');
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          if (errorCode == "auth/weak-password") {
+            alert("The password is too weak.");
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+        });
+    },
+    login(){
+
+    },
+  },
 };
 </script>
 
