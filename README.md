@@ -2,14 +2,10 @@
 
 ```mermaid
     graph TD;
-        fa:fa-user-->fa:fa-database;
-        fa:fa-database-->B;
-        fa:fa-database-->C;
-        fa:fa-database-->J;
-        J-->D;
+        A-->B;
+        B-->C;
         B-->D;
         C-->D;
-        D-->fa:fa-stop
 ```
 ## Project setup
 ```
