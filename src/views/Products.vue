@@ -50,6 +50,22 @@
           </div>
         </div>
       </div>
+      <hr />
+      <h3>Get all documents of a collection from cloud firestore</h3>
+      <div class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr :key="product.id" v-for="product in products">
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
+          </tr>
+        </tbody>
+      </div>
     </div>
   </div>
 </template>
@@ -61,6 +77,7 @@ export default {
   name: "Products",
   data() {
     return {
+      products: [],
       product: {
         name: null,
         price: null,
@@ -74,16 +91,31 @@ export default {
         .add(this.product)
         .then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
-          this.reset();
+          this.readData();
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
+          console.log("");
         });
     },
-    reset(){
+    readData() {
+      db.collection("products")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data());
+            this.products.push(doc.data());
+          });
+        });
+    },
+    reset() {
       // Object.assign(this.$data, getDefaultData());
-      Object.assign(this.$data, this.$options.data.apply(this))
-    }
+      // Object.assign(this.$data, this.$options.data.apply(this));
+    },
+  },
+  created() {
+    this.readData()
   },
 };
 </script>
