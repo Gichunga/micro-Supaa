@@ -51,21 +51,28 @@
         </div>
       </div>
       <hr />
-      <h3>Get all documents of a collection from cloud firestore</h3>
-      <div class="table table-striped">
+      <h3>CRUD operation on the documents of a collection from cloud firestore</h3>
+      <div class="table-responsive">
+
+      </div>
+      <table class="table table-striped">
         <thead>
           <tr>
             <th>Name</th>
             <th>Price</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr :key="product.id" v-for="product in products">
-            <td>{{ product.name }}</td>
-            <td>{{ product.price }}</td>
+            <td>{{ product.data().name }}</td>
+            <td>{{ product.data().price }}</td>
+            <td><button class="btn btn-primary">Edit</button></td>
+            <td><button class="btn btn-danger" @click="deleteProduct(product.id)">Delete</button></td>
           </tr>
         </tbody>
-      </div>
+      </table>
     </div>
   </div>
 </template>
@@ -105,9 +112,13 @@ export default {
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             // console.log(doc.id, " => ", doc.data());
-            this.products.push(doc.data());
+            this.products.push(doc);
           });
         });
+    },
+    deleteProduct(id){
+      // alert(id);
+      
     },
     reset() {
       // Object.assign(this.$data, getDefaultData());
