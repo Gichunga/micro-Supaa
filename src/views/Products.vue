@@ -51,10 +51,10 @@
         </div>
       </div>
       <hr />
-      <h3>CRUD operation on the documents of a collection from cloud firestore</h3>
-      <div class="table-responsive">
-
-      </div>
+      <h3>
+        CRUD operation on the documents of a collection from cloud firestore
+      </h3>
+      <div class="table-responsive"></div>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -69,7 +69,11 @@
             <td>{{ product.data().name }}</td>
             <td>{{ product.data().price }}</td>
             <td><button class="btn btn-primary">Edit</button></td>
-            <td><button class="btn btn-danger" @click="deleteProduct(product.id)">Delete</button></td>
+            <td>
+              <button class="btn btn-danger" @click="deleteProduct(product.id)">
+                Delete
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -116,9 +120,20 @@ export default {
           });
         });
     },
-    deleteProduct(id){
+    deleteProduct(doc) {
       // alert(id);
-      
+      if (confirm("Are you sure?")) {
+        // alert(id);
+        db.collection("products")
+          .doc(doc)
+          .delete()
+          .then(() => {
+            alert("Document successfully deleted!");
+          })
+          .catch((error) => {
+            console.error("Error removing document: ", error);
+          });
+      }
     },
     reset() {
       // Object.assign(this.$data, getDefaultData());
@@ -126,7 +141,7 @@ export default {
     },
   },
   created() {
-    this.readData()
+    this.readData();
   },
 };
 </script>
