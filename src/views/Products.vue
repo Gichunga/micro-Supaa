@@ -138,7 +138,11 @@
             <td>{{ product.tag }}</td>
             <td>{{ product.image }}</td>
             <td><button class="btn btn-primary">Edit</button></td>
-            <td><button class="btn btn-danger">Delete</button></td>
+            <td>
+              <button @click="deleteProduct(product)" class="btn btn-danger">
+                Delete
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -176,7 +180,24 @@ export default {
       $("#product").modal("hide");
     },
     readData() {},
-    deleteProduct(doc) {},
+    deleteProduct(doc) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert  this!",
+        icon: "Warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$firestore.products.doc(doc[".key"]).delete();
+          Toast.fire({
+            icon: "success",
+            title: "Deleted successfully",
+          });
+        }
+      });
+    },
     launchEditProductModal(doc) {
       $("#product").modal("show");
       this.product = doc.data();
