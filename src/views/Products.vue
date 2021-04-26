@@ -57,7 +57,12 @@
                     />
                   </div>
                   <div class="form-group">
-                    <textarea cols="30" rows="10" class="form-control" v-model="product.description">
+                    <textarea
+                      cols="30"
+                      rows="10"
+                      class="form-control"
+                      v-model="product.description"
+                    >
                     Product description
                     </textarea>
                   </div>
@@ -80,7 +85,7 @@
                     />
                     <h6 class="d-inline">Product Images</h6>
                     <input
-                    @change="uploadImage()"
+                      @change="uploadImage()"
                       type="file"
                       class="form-control"
                     />
@@ -96,11 +101,7 @@
               >
                 Close
               </button>
-              <button
-                @click="addProduct"
-                type="button"
-                class="btn btn-primary"
-              >
+              <button @click="addProduct" type="button" class="btn btn-primary">
                 Save Changes
               </button>
             </div>
@@ -131,8 +132,13 @@
         </thead>
         <tbody>
           <tr :key="product.id" v-for="product in products">
-            <td>{{product.name}}</td>
-            <td>{{product.description}}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.tag }}</td>
+            <td>{{ product.image }}</td>
+            <td><button class="btn btn-primary">Edit</button></td>
+            <td><button class="btn btn-danger">Delete</button></td>
           </tr>
         </tbody>
       </table>
@@ -160,29 +166,17 @@ export default {
   },
   firestore() {
     return {
-      products: db.collection('products'),
-    }
+      products: db.collection("products"),
+    };
   },
   methods: {
     addProduct() {
       // Add a new document with a generated id.
-      this.$firestore.products
-        .add(this.product)
-        .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
-          this.readData();
-        })
-        .catch((error) => {
-          console.error("Error adding document: ", error);
-          console.log("");
-        });
+      this.$firestore.products.add(this.product);
+      $("#product").modal("hide");
     },
-    readData() {
-      
-    },
-    deleteProduct(doc) {
-      
-    },
+    readData() {},
+    deleteProduct(doc) {},
     launchEditProductModal(doc) {
       $("#product").modal("show");
       this.product = doc.data();
@@ -191,9 +185,7 @@ export default {
     launchAddProductModal() {
       $("#product").modal("show");
     },
-    updateProduct() {
-      
-    },
+    updateProduct() {},
     reset() {
       // Object.assign(this.$data, getDefaultData());
       // Object.assign(this.$data, this.$options.data.apply(this));
