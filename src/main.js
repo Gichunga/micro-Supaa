@@ -7,9 +7,13 @@ import $ from "jquery";
 window.$ = window.jQuery = $;
 import "popper.js";
 import {fb} from "./firebase"
-Vue.config.productionTip = false;
+import VueFirestore from "vue-firestore"
 
-//Reister global components
+Vue.config.productionTip = false; // Turns off the you are running vue in development msg
+
+Vue.use(VueFirestore)
+
+//Register global components
 Vue.component('Navbar', require('./components/Navbar.vue').default);
 Vue.component('products-list', require('./sections/ProductList.vue').default);
 

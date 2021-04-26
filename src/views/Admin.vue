@@ -1,6 +1,6 @@
 <template>
   <div class="admin">
-    <div class="page-wrapper default-theme sidebar-bg bg1 toggled">
+    <div class="page-wrapper default-theme sidebar-bg bg1">
       <a
         id="show-sidebar"
         @click="toggleSidebar"
@@ -32,7 +32,7 @@
                 >Jhon
                 <strong>Smith</strong>
               </span>
-              <span class="user-role"> {{ email }} </span>
+              <span class="user-role"> </span>
               <span class="user-status">
                 <i class="fa fa-circle"></i>
                 <span>Online</span>

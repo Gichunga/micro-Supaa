@@ -21,129 +21,118 @@
           </div>
         </div>
       </div>
-      <hr />
 
-      <div class="form h-100">
-        <div class="row h-100">
-          <div class="col-md-10">
-            <div class="form-group">
-              <label for="name">Product:</label>
-              <input
-                type="text"
-                v-model="product.name"
-                class="form-control"
-                placeholder="product name"
-              />
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="product"
+        data-backdrop="static"
+        data-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="productLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="productLabel">Add Product</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-            <div class="form-group">
-              <label for="name">Price:</label>
-              <input
-                type="integer"
-                v-model="product.price"
-                class="form-control"
-                placeholder="price"
-              />
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      v-model="product.name"
+                      class="form-control"
+                      placeholder="product name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <textarea cols="30" rows="10" class="form-control" v-model="product.description">
+                    Product description
+                    </textarea>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <h5>Product Details</h5>
+                  <hr />
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      v-model="product.price"
+                      class="form-control mb-2"
+                      placeholder="product price"
+                    />
+                    <input
+                      type="text"
+                      v-model="product.tag"
+                      class="form-control mb-3"
+                      placeholder="product tag"
+                    />
+                    <h6 class="d-inline">Product Images</h6>
+                    <input
+                    @change="uploadImage()"
+                      type="file"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-              <input type="submit" @click="saveData" value="Submit" />
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                @click="addProduct"
+                type="button"
+                class="btn btn-primary"
+              >
+                Save Changes
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- endmodal -->
       <hr />
-      <h3>
-        <!-- Modal -->
-        <div
-          class="modal fade"
-          id="edit"
-          data-backdrop="static"
-          data-keyboard="false"
-          tabindex="-1"
-          aria-labelledby="editLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="editLabel">Modal title</h5>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="form-group">
-                  <input
-                    type="text"
-                    v-model="product.name"
-                    class="form-control"
-                    placeholder="product name"
-                  />
-                </div>
-                <div class="form-group">
-                  <input
-                    type="integer"
-                    v-model="product.price"
-                    class="form-control"
-                    placeholder="price"
-                  />
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button
-                  @click="updateProduct"
-                  type="button"
-                  class="btn btn-primary"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- endmodal -->
-
-        CRUD operation on the documents of a collection from cloud firestore
-      </h3>
+      <h3 class="d-inline-block">Products List</h3>
+      <button
+        @click="launchAddProductModal"
+        class="btn btn-primary float-right"
+      >
+        Add Product
+      </button>
       <div class="table-responsive"></div>
       <table class="table table-striped">
         <thead>
           <tr>
             <th>Name</th>
+            <th>Description</th>
             <th>Price</th>
-            <th></th>
-            <th></th>
+            <th>Tag</th>
+            <th>Image</th>
+            <th colspan="2" align="center">Modify</th>
           </tr>
         </thead>
         <tbody>
           <tr :key="product.id" v-for="product in products">
-            <td>{{ product.data().name }}</td>
-            <td>{{ product.data().price }}</td>
-            <td>
-              <button
-                class="btn btn-primary"
-                @click="launchEditProductModal(product)"
-              >
-                Edit
-              </button>
-            </td>
-            <td>
-              <button class="btn btn-danger" @click="deleteProduct(product.id)">
-                Delete
-              </button>
-            </td>
+            <td>{{product.name}}</td>
+            <td>{{product.description}}</td>
           </tr>
         </tbody>
       </table>
@@ -161,15 +150,23 @@ export default {
       products: [],
       product: {
         name: null,
+        description: null,
+        tag: null,
+        image: null,
         price: null,
       },
       activeItem: null,
     };
   },
+  firestore() {
+    return {
+      products: db.collection('products'),
+    }
+  },
   methods: {
-    saveData() {
+    addProduct() {
       // Add a new document with a generated id.
-      db.collection("products")
+      this.$firestore.products
         .add(this.product)
         .then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
@@ -181,48 +178,21 @@ export default {
         });
     },
     readData() {
-      db.collection("products")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            // console.log(doc.id, " => ", doc.data());
-            this.products.push(doc);
-          });
-        });
+      
     },
     deleteProduct(doc) {
-      // alert(id);
-      if (confirm("Are you sure?")) {
-        // alert(id);
-        db.collection("products")
-          .doc(doc)
-          .delete()
-          .then(() => {
-            alert("Document successfully deleted!");
-          })
-          .catch((error) => {
-            console.error("Error removing document: ", error);
-          });
-      }
+      
     },
     launchEditProductModal(doc) {
-      $("#edit").modal("show");
+      $("#product").modal("show");
       this.product = doc.data();
       this.activeItem = doc.id;
     },
+    launchAddProductModal() {
+      $("#product").modal("show");
+    },
     updateProduct() {
-      db.collection("products")
-        .doc(this.activeItem)
-        .update(this.product)
-        .then(() => {
-          $("#edit").modal("hide");
-          console.log("Document successfully updated!");
-        })
-        .catch((error) => {
-          // The document probably doesn't exist.
-          console.error("Error updating document: ", error);
-        });
+      
     },
     reset() {
       // Object.assign(this.$data, getDefaultData());
