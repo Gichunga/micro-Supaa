@@ -84,7 +84,7 @@
                     />
                     <h6 class="d-inline">Product Images</h6>
                     <input
-                      @change="uploadImage()"
+                      @change="uploadImage"
                       type="file"
                       class="form-control"
                     />
@@ -237,7 +237,20 @@ export default {
     addTag() {
       // console.log("pressed")
       this.product.tags.push(this.tag);
-      this.tag = '';
+      this.tag = "";
+    },
+    uploadImage(e) {
+      let file = e.target.files[0];
+      var storageRef = fb
+        .storage()
+        .ref("products/" + file.name)
+        .put(file)
+        .then((response) => {
+          response.ref.getDownloadURL().then((downloadURL) => {
+            this.product.image = downloadURL;
+            // console.log("File available at", downloadURL);
+          });
+        });
     },
   },
 };
