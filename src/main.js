@@ -8,7 +8,6 @@ window.$ = window.jQuery = $;
 import "popper.js";
 import {fb} from "./firebase"
 import VueFirestore from "vue-firestore"
-
 import Swal from 'sweetalert2'
 window.Swal = Swal;
 
@@ -28,7 +27,10 @@ window.Toast = Toast;
 
 Vue.config.productionTip = false; // Turns off the you are running vue in development msg
 
-Vue.use(VueFirestore)
+Vue.use(VueFirestore, {
+  key: 'id', // The name of the property. Default is '.key'
+  enumerable: true // Whether it is enumerable or not. default is true
+})
 
 //Register global components
 Vue.component('Navbar', require('./components/Navbar.vue').default);

@@ -35,7 +35,12 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="productLabel">Add Product</h5>
+              <h5 class="modal-title" id="productLabel" v-if="modal == 'new'">
+                Add Product
+              </h5>
+              <h5 class="modal-title" id="productLabel" v-if="modal == 'edit'">
+                Edit Product
+              </h5>
               <button
                 type="button"
                 class="close"
@@ -57,14 +62,7 @@
                     />
                   </div>
                   <div class="form-group">
-                    <textarea
-                      cols="30"
-                      rows="10"
-                      class="form-control"
-                      v-model="product.description"
-                    >
-                    Product description
-                    </textarea>
+                    <vue-editor v-model="product.description"></vue-editor>
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -101,8 +99,21 @@
               >
                 Close
               </button>
-              <button @click="addProduct" type="button" class="btn btn-primary">
-                Save Changes
+              <button
+                v-if="modal == 'new'"
+                @click="addProduct"
+                type="button"
+                class="btn btn-primary"
+              >
+                Save Product
+              </button>
+              <button
+                v-if="modal == 'edit'"
+                @click="updateProduct(product)"
+                type="button"
+                class="btn btn-primary"
+              >
+                Apply Changes
               </button>
             </div>
           </div>
@@ -112,10 +123,7 @@
       <!-- endmodal -->
       <hr />
       <h3 class="d-inline-block">Products List</h3>
-      <button
-        @click="launchAddProductModal"
-        class="btn btn-primary float-right"
-      >
+      <button @click="newProduct" class="btn btn-primary float-right">
         Add Product
       </button>
       <div class="table-responsive"></div>
@@ -137,7 +145,11 @@
             <td>{{ product.price }}</td>
             <td>{{ product.tag }}</td>
             <td>{{ product.image }}</td>
-            <td><button class="btn btn-primary">Edit</button></td>
+            <td>
+              <button class="btn btn-primary" @click="editProduct(product)">
+                Edit
+              </button>
+            </td>
             <td>
               <button @click="deleteProduct(product)" class="btn btn-danger">
                 Delete
@@ -152,9 +164,13 @@
 
 <script>
 import { fb, db } from "../firebase";
+import { VueEditor } from "vue2-editor";
 
 export default {
   name: "Products",
+  components: {
+    VueEditor,
+  },
   data() {
     return {
       products: [],
@@ -166,6 +182,7 @@ export default {
         price: null,
       },
       activeItem: null,
+      modal: null,
     };
   },
   firestore() {
@@ -179,8 +196,12 @@ export default {
       this.$firestore.products.add(this.product);
       $("#product").modal("hide");
     },
-    readData() {},
-    deleteProduct(doc) {
+    editProduct(product) {
+      this.modal = "edit";
+      this.product = product;
+      $("#product").modal("show");
+    },
+    deleteProduct(product) {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert  this!",
@@ -190,7 +211,7 @@ export default {
         cancelButtonColor: "#d33",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$firestore.products.doc(doc[".key"]).delete();
+          this.$firestore.products.doc(product.id).delete();
           Toast.fire({
             icon: "success",
             title: "Deleted successfully",
@@ -198,22 +219,20 @@ export default {
         }
       });
     },
-    launchEditProductModal(doc) {
-      $("#product").modal("show");
-      this.product = doc.data();
-      this.activeItem = doc.id;
-    },
-    launchAddProductModal() {
+    newProduct() {
+      this.modal = "new";
       $("#product").modal("show");
     },
-    updateProduct() {},
-    reset() {
-      // Object.assign(this.$data, getDefaultData());
-      // Object.assign(this.$data, this.$options.data.apply(this));
+    updateProduct(product) {
+      this.$firestore.products.doc(product.id).update(this.product);
+      $("#product").modal("hide");
+
+      Toast.fire({
+        icon: "success",
+        title: this.product.name + " updated successfully",
+      });
     },
-  },
-  created() {
-    this.readData();
+    reset() {},
   },
 };
 </script>
