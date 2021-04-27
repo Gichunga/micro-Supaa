@@ -75,6 +75,8 @@
                       class="form-control mb-2"
                       placeholder="product price"
                     />
+                  </div>
+                  <div class="form-group">
                     <input
                       type="text"
                       v-model="tag"
@@ -82,6 +84,17 @@
                       class="form-control mb-3"
                       placeholder="product tag"
                     />
+                    <p>
+                      <small
+                        class="tag text-muted rounded-pill m-1 p-2"
+                        :key="tag.id"
+                        v-for="tag in product.tags"
+                        >{{ tag }} <sup><i class="fas fa-times"></i></sup
+                      ></small>
+                    </p>
+                  </div>
+
+                  <div class="form-group">
                     <h6 class="d-inline">Product Images</h6>
                     <input
                       @change="uploadImage"
@@ -89,15 +102,20 @@
                       class="form-control"
                     />
                   </div>
+                  <div class="form-group d-flex">
+                    <div
+                      :key="image.id"
+                      v-for="image in product.images"
+                      class="p-1"
+                    >
+                      <img :src="image" width="80px" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-danger" data-dismiss="modal">
                 Close
               </button>
               <button
@@ -179,7 +197,7 @@ export default {
         name: null,
         description: null,
         tags: [],
-        image: null,
+        images: [],
         price: null,
       },
       activeItem: null,
@@ -241,17 +259,24 @@ export default {
     },
     uploadImage(e) {
       let file = e.target.files[0];
-      var storageRef = fb
-        .storage()
-        .ref("products/" + file.name)
-        .put(file)
-        .then((response) => {
-          response.ref.getDownloadURL().then((downloadURL) => {
-            this.product.image = downloadURL;
-            // console.log("File available at", downloadURL);
+      if (file) {
+        var storageRef = fb
+          .storage()
+          .ref("products/" + file.name)
+          .put(file)
+          .then((response) => {
+            response.ref.getDownloadURL().then((downloadURL) => {
+              this.product.images.push(downloadURL);
+            });
           });
-        });
+      }
     },
   },
 };
 </script>
+
+<style scoped>
+.tag {
+  background-color: lightgray;
+}
+</style>
