@@ -77,7 +77,8 @@
                     />
                     <input
                       type="text"
-                      v-model="product.tag"
+                      v-model="tag"
+                      @keyup.188="addTag"
                       class="form-control mb-3"
                       placeholder="product tag"
                     />
@@ -177,12 +178,13 @@ export default {
       product: {
         name: null,
         description: null,
-        tag: null,
+        tags: [],
         image: null,
         price: null,
       },
       activeItem: null,
       modal: null,
+      tag: "",
     };
   },
   firestore() {
@@ -232,7 +234,11 @@ export default {
         title: this.product.name + " updated successfully",
       });
     },
-    reset() {},
+    addTag() {
+      // console.log("pressed")
+      this.product.tags.push(this.tag);
+      this.tag = '';
+    },
   },
 };
 </script>
