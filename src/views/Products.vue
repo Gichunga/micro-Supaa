@@ -93,7 +93,6 @@
                       ></small>
                     </p>
                   </div>
-
                   <div class="form-group">
                     <h6 class="d-inline">Product Images</h6>
                     <input
@@ -104,11 +103,14 @@
                   </div>
                   <div class="form-group d-flex">
                     <div
-                      :key="image.id"
-                      v-for="image in product.images"
+                      :key="index"
+                      v-for="(image, index) in product.images"
                       class="p-1"
                     >
-                      <img :src="image" width="80px" />
+                      <div class="img-wrap">
+                        <img :src="image" width="80px" />
+                        <i class="delete-img fas fa-times" @click="deleteImage(image, index)"></i>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -184,6 +186,7 @@
 <script>
 import { fb, db } from "../firebase";
 import { VueEditor } from "vue2-editor";
+// import "firebase/storage";
 
 export default {
   name: "Products",
@@ -258,8 +261,8 @@ export default {
       this.tag = "";
     },
     uploadImage(e) {
-      let file = e.target.files[0];
-      if (file) {
+      if (e.target.files[0]) {
+        let file = e.target.files[0];
         var storageRef = fb
           .storage()
           .ref("products/" + file.name)
@@ -271,6 +274,17 @@ export default {
           });
       }
     },
+    deleteImage(url, index){
+      console.log(index)
+      let imageUrl = fb.storage().refFromURL(url);
+
+      this.product.images.splice(index, 1);
+      imageUrl.delete().then(() => {
+        alert("deleted")
+      }).catch(err => {
+        alert("something wrong happened")
+      });
+    }
   },
 };
 </script>
@@ -278,5 +292,16 @@ export default {
 <style scoped>
 .tag {
   background-color: lightgray;
+}
+.img-wrap {
+  position: relative;
+}
+.img-wrap i.delete-img {
+  position: absolute;
+  top: -14px;
+  left: -1px;
+}
+.img-wrap i.delete-img:hover {
+  cursor: pointer;
 }
 </style>
