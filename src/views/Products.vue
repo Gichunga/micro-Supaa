@@ -90,7 +90,12 @@
                         class="tag text-muted rounded-pill m-1 p-2"
                         :key="index"
                         v-for="(tag, index) in product.tags"
-                        >{{ tag }} <sup><i class="fas fa-times" @click="deleteTag(index)"></i></sup
+                        >{{ tag }}
+                        <sup
+                          ><i
+                            class="fas fa-times"
+                            @click="deleteTag(index)"
+                          ></i></sup
                       ></small>
                     </p>
                   </div>
@@ -103,7 +108,7 @@
                     />
                   </div>
                   <div class="form-group d-flex">
-                    <div 
+                    <div
                       :key="index"
                       v-for="(image, index) in product.images"
                       class="p-1"
@@ -282,8 +287,10 @@ export default {
         removeComma += tag[i];
       }
       if (removeComma === "") {
-        document.getElementById('tagInput').setAttribute("title", "a tag name is needed before comma");
-      }else{
+        document
+          .getElementById("tagInput")
+          .setAttribute("title", "a tag name is needed before comma");
+      } else {
         this.product.tags.push(removeComma);
         this.tag = "";
       }
@@ -315,9 +322,9 @@ export default {
           alert("something wrong happened");
         });
     },
-    deleteTag(index){
-      this.product.tags.splice(index, 1)
-    }
+    deleteTag(index) {
+      this.product.tags.splice(index, 1);
+    },
   },
 };
 </script>

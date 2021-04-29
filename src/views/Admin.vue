@@ -32,7 +32,7 @@
                 >Jhon
                 <strong>Smith</strong>
               </span>
-              <span class="user-role"> </span>
+              <span class="user-role"> {{email}}</span>
               <span class="user-status">
                 <i class="fa fa-circle"></i>
                 <span>Online</span>
@@ -115,7 +115,12 @@ import {fb} from "../firebase"
 
 export default {
   name: "admin",
-
+  data(){
+    return{
+      name : null,
+      email: null,
+    }
+  },
   methods: {
     toggleSidebar() {
       $(".page-wrapper").toggleClass("toggled");
@@ -129,6 +134,12 @@ export default {
       });
     }
   },
+  created(){
+    let user = fb.auth().currentUser;
+    this.email = user.email;
+    // console.log(this.name)
+
+  }
 };
 </script>
 
