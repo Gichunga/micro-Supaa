@@ -82,14 +82,15 @@
                       v-model="tag"
                       @keyup.188="addTag"
                       class="form-control mb-3"
+                      id="tagInput"
                       placeholder="product tag"
                     />
                     <p>
                       <small
                         class="tag text-muted rounded-pill m-1 p-2"
-                        :key="tag.id"
-                        v-for="tag in product.tags"
-                        >{{ tag }} <sup><i class="fas fa-times"></i></sup
+                        :key="index"
+                        v-for="(tag, index) in product.tags"
+                        >{{ tag }} <sup><i class="fas fa-times" @click="deleteTag(index)"></i></sup
                       ></small>
                     </p>
                   </div>
@@ -102,14 +103,17 @@
                     />
                   </div>
                   <div class="form-group d-flex">
-                    <div
+                    <div 
                       :key="index"
                       v-for="(image, index) in product.images"
                       class="p-1"
                     >
                       <div class="img-wrap">
                         <img :src="image" width="80px" />
-                        <i class="delete-img fas fa-times" @click="deleteImage(image, index)"></i>
+                        <i
+                          class="delete-img fas fa-times"
+                          @click="deleteImage(image, index)"
+                        ></i>
                       </div>
                     </div>
                   </div>
@@ -154,18 +158,14 @@
             <th>Name</th>
             <th>Description</th>
             <th>Price</th>
-            <th>Tag</th>
-            <th>Image</th>
             <th colspan="2" align="center">Modify</th>
           </tr>
         </thead>
         <tbody>
           <tr :key="product.id" v-for="product in products">
             <td>{{ product.name }}</td>
-            <td>{{ product.description }}</td>
+            <td v-html="product.description"></td>
             <td>{{ product.price }}</td>
-            <td>{{ product.tag }}</td>
-            <td>{{ product.image }}</td>
             <td>
               <button class="btn btn-primary" @click="editProduct(product)">
                 Edit
@@ -205,7 +205,7 @@ export default {
       },
       activeItem: null,
       modal: null,
-      tag: "",
+      tag: null,
     };
   },
   firestore() {
@@ -214,10 +214,25 @@ export default {
     };
   },
   methods: {
+    reset() {
+      // Object.assign(this.$data, this.$options.data.call(this));
+      this.product = {
+        name: null,
+        description: null,
+        tags: [],
+        images: [],
+        price: null,
+      };
+    },
     addProduct() {
       // Add a new document with a generated id.
-      this.$firestore.products.add(this.product);
-      $("#product").modal("hide");
+      this.$firestore.products.add(this.product).then(() => {
+        $("#product").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: this.product.name + " added successfully",
+        });
+      });
     },
     editProduct(product) {
       this.modal = "edit";
@@ -228,7 +243,7 @@ export default {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert  this!",
-        icon: "Warning",
+        icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
@@ -244,6 +259,7 @@ export default {
     },
     newProduct() {
       this.modal = "new";
+      this.reset();
       $("#product").modal("show");
     },
     updateProduct(product) {
@@ -257,8 +273,20 @@ export default {
     },
     addTag() {
       // console.log("pressed")
-      this.product.tags.push(this.tag);
-      this.tag = "";
+      let removeComma = "";
+      let tag = this.tag.trim();
+      for (let i = 0; i < tag.length; i++) {
+        if (tag[i] === ",") {
+          continue;
+        }
+        removeComma += tag[i];
+      }
+      if (removeComma === "") {
+        document.getElementById('tagInput').setAttribute("title", "a tag name is needed before comma");
+      }else{
+        this.product.tags.push(removeComma);
+        this.tag = "";
+      }
     },
     uploadImage(e) {
       if (e.target.files[0]) {
@@ -274,16 +302,21 @@ export default {
           });
       }
     },
-    deleteImage(url, index){
-      console.log(index)
+    deleteImage(url, index) {
       let imageUrl = fb.storage().refFromURL(url);
 
       this.product.images.splice(index, 1);
-      imageUrl.delete().then(() => {
-        alert("deleted")
-      }).catch(err => {
-        alert("something wrong happened")
-      });
+      imageUrl
+        .delete()
+        .then(() => {
+          alert("deleted");
+        })
+        .catch((err) => {
+          alert("something wrong happened");
+        });
+    },
+    deleteTag(index){
+      this.product.tags.splice(index, 1)
     }
   },
 };
