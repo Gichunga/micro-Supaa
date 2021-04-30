@@ -30,7 +30,7 @@
                   >Login</a
                 >
               </li>
-              <li class="nav-item">
+              <li class="nav-item"> 
                 <a
                   class="nav-link"
                   id="pills-register-tab"
@@ -151,13 +151,13 @@
 </template>
 
 <script>
-import { fb } from "../firebase.js";
+import { fb, db } from "../firebase.js";
 
 export default {
   name: "Login",
   data() {
     return {
-      name: null,
+      name: null, 
       email: null,
       password: null,
     };
@@ -168,6 +168,17 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .then((user) => {
           $("#login").modal("hide");
+          db.collection("profiles")
+            .doc(user.user.uid)
+            .set({
+              name: this.name
+            })
+            .then(() => {
+              console.log("Document successfully written!");
+            })
+            .catch((error) => {
+              console.error("Error writing document: ", error);
+            });
           this.$router.replace("admin");
         })
         .catch((error) => {
@@ -183,26 +194,25 @@ export default {
         });
     },
     login() {
-      fb
-        .auth()
+      fb.auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then((user) => {
           $("#login").modal("hide");
-          this.$router.replace("admin") //replace the url to admin
+          this.$router.replace("admin"); //replace the url to admin
         })
         .catch(function (error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
           if (errorCode === "auth/wrong-password") {
-            alert("Wrong password.");
+            alert("Wrong password."); 
           } else if (errorCode === "auth/invalid-email") {
             alert("Email is invalid.");
-          }else if (errorCode === "auth/user-not-found") {
+          } else if (errorCode === "auth/user-not-found") {
+            alert("Your credentials does not match our records.");
+          } else if (errorCode === "auth/user-disabled") {
             alert("Your account has been temporaly disabled.");
-          }else if (errorCode === "auth/user-disabled") {
-            alert("Your account has been temporaly disabled.");
-          } else{
+          } else {
             alert(errorMessage);
           }
           console.log(error);
