@@ -10,6 +10,8 @@ import { fb } from "./firebase";
 import VueFirestore from "vue-firestore";
 import Swal from "sweetalert2";
 import VueCarousel from "vue-carousel";
+import Vue2Filters from 'vue2-filters'
+
 
 window.Swal = Swal;
 
@@ -33,6 +35,8 @@ Vue.use(VueFirestore, {
   enumerable: true, // Whether it is enumerable or not. default is true
 });
 Vue.use(VueCarousel);
+Vue.use(Vue2Filters)
+
 
 //Register global components
 Vue.component("Navbar", require("./components/Navbar.vue").default);
