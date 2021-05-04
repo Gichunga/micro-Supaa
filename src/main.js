@@ -41,6 +41,7 @@ Vue.use(Vue2Filters)
 //Register global components
 Vue.component("Navbar", require("./components/Navbar.vue").default);
 Vue.component("products-list", require("./sections/ProductList.vue").default);
+Vue.component("add-to-cart", require("./components/AddToCart.vue").default);
 
 let app = "";
 fb.auth().onAuthStateChanged((user) => {

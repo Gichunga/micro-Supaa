@@ -20,10 +20,9 @@
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <h5 class="card-title">{{ product.name }}</h5>
-                <h5 class="card-price shadow rounded p-2">{{ product.price | currency('Ksh',2, { spaceBetweenAmountAndSymbol: true }) }}</h5>
+                <h5 class="card-price shadow rounded p-2"><small>{{ product.price | currency('Ksh',2, { spaceBetweenAmountAndSymbol: true }) }}</small></h5>
               </div>
-                <h5 class="card-price shadow rounded p-2">{{ product.description }}</h5>
-                <button class="btn btn-primary">Add To Cart</button>
+                <h5 v-html="'<small>'+product.description+'</small>'"></h5>
 
               <add-to-cart
                 :image="getImage(product.images)"

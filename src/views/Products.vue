@@ -70,7 +70,7 @@
                   <hr />
                   <div class="form-group">
                     <input
-                      type="text"
+                      type="number"
                       v-model="product.price"
                       class="form-control mb-2"
                       placeholder="product price"
