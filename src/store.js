@@ -5,11 +5,13 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    count: 0
+    cart: [],
   },
-  // mutations: {
-  //   increment (state) {
-  //     state.count++
-  //   }
-  // }
+  mutations: {
+    addToCart (state, item) {
+      state.cart.push(item);
+    }
+  }
 })
+
+export {store}
