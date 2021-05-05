@@ -10,7 +10,7 @@ export default {
 
   props: {
     image: String,
-    productId: String,
+    pId: String,
     name: String,
     price: String,
   },
@@ -19,8 +19,9 @@ export default {
       item: {
         productName: this.name,
         productImage: this.image,
-        product_Id: this.productId,
+        product_Id: this.pId,
         productPrice: this.price,
+        productQuantity: 1,
       }
     }
   },
