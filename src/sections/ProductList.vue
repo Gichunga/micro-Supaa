@@ -4,15 +4,15 @@
       <h1 class="text-center p-5">Our Products List</h1>
       <div class="row">
         <div class="col-md-4 mb-4" :key="index" v-for="(product, index) in products">
-          <div class="card product-item">
-            <carousel :perPage="1">
+          <div class="card product-item" style="height: 100%">
+            <carousel :perPage="1" :autoplay="true" :autoplayTimeout="6000" :speed="1500" :loop="true">
               <slide :key="index" v-for="(image, index) in product.images">
                 <img
                   :src="image"
                   class="card-img-top img img-responsive"
                   alt="..."
-                  width="250px"
-                  height="300px"
+                  width="100px"
+                  height="150px"
                 />
               </slide>
             </carousel>

@@ -265,7 +265,7 @@ export default {
         .put(file)
         .then((response) => {
             response.ref.getDownloadURL().then((downloadURL) => {
-              this.account.profileUrl.push(downloadURL);
+              this.account.photoUrl.push(downloadURL);
             })
         })
         .catch((err) => {

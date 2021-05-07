@@ -26,66 +26,7 @@
     </div>
     <Login></Login>
     <!-- Modal -->
-    <div
-      class="modal fade"
-      id="miniCart"
-      data-backdrop="static"
-      data-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="miniCartLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="miniCartLabel">Checkout Products</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <ul>
-              <li
-                :key="item.id"
-                v-for="item in this.$store.state.cart"
-                class="media"
-              >
-                <img
-                  :src="item.productImage"
-                  width="80px"
-                  class="align-self-center mr-3"
-                  alt=""
-                />
-                <div class="media-body">
-                  <h5 class="mt-0">
-                    {{ item.productName }}
-                    <!-- <span class='float-right' @click="$store.commit('removeFromCart',item)">X</span> -->
-                  </h5>
-                  <p class="mt-0">
-                    {{ item.productPrice | currency("Ksh") }}
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Continue Shopping
-            </button>
-            <button type="button" class="btn btn-primary">Checkout</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <mini-cart></mini-cart>
   </div>
 </template>
 
@@ -94,6 +35,7 @@
 import Hero from "@/components/Hero.vue";
 import Products from "@/sections/Products.vue";
 import Login from "@/sections/Login.vue";
+import MiniCart from '../components/MiniCart.vue';
 
 export default {
   name: "home",
@@ -101,6 +43,7 @@ export default {
     Hero,
     Products,
     Login,
+    MiniCart,
   },
 };
 </script>
