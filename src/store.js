@@ -20,13 +20,19 @@ const store = new Vuex.Store({
       } else {
         state.cart.push(item);
       }    
-
       this.commit('saveData');
     },
-    
+
     saveData(state){
       window.localStorage.setItem('cart', JSON.stringify(state.cart));
+    },
+
+    removeFromCart(state, item){
+      let indexOfItem = state.cart.indexOf(item);
+      state.cart.splice(indexOfItem, 1);
+      this.commit('saveData');
     }
+
   },
 });
 
