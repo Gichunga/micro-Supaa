@@ -3,9 +3,11 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+let cart = window.localStorage.getItem('cart');
+
 const store = new Vuex.Store({
   state: {
-    cart: [],
+    cart: cart ? JSON.parse(cart) : [],
   },
   mutations: {
     addToCart(state, item) {
@@ -13,12 +15,18 @@ const store = new Vuex.Store({
         (product) => product.product_Id == item.product_Id
       );
       if (found) {
-        found.productQuantity++;
-        found.productPrice * found.productQuantity;
+        let price = found.productQuantity++;
+        state.cart.productPrice = item.productPrice * found.productQuantity;
       } else {
         state.cart.push(item);
-      }
+      }    
+
+      this.commit('saveData');
     },
+    
+    saveData(state){
+      window.localStorage.setItem('cart', JSON.stringify(state.cart));
+    }
   },
 });
 
