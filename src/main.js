@@ -13,7 +13,6 @@ import Swal from "sweetalert2";
 import VueCarousel from "vue-carousel";
 import Vue2Filters from 'vue2-filters'
 
-
 window.Swal = Swal;
 
 const Toast = Swal.mixin({
